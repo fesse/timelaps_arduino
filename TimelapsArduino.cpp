@@ -83,16 +83,76 @@ void serial_loop() {
 	  thisByte++;
 }
 
+void debug_setup() {
+	  Serial.begin(9600);
+	  Serial.println("Debug Arduino");
+	  pinMode(13, OUTPUT);
+	  pinMode(8, OUTPUT);
+	  pinMode(7, OUTPUT);
+}
+
+long cnt = 0;
+bool d13on = false;
+bool d8on = true;
+bool d7on = false;
+
+uint8_t portb_state = 0;
+uint8_t portd_state = 0;
+
+void debug_loop() {
+	cnt++;
+	if (cnt == 500000) {
+		cnt = 0;
+		digitalWrite(13, d13on?LOW:HIGH);
+		digitalWrite(8, d8on?LOW:HIGH);
+		digitalWrite(7, d7on?LOW:HIGH);
+		d13on = !d13on;
+		d8on = !d8on;
+		d7on = !d7on;
+	}
+
+	if (PORTD != portd_state || (PORTB & 0x63) != portb_state) {
+		portd_state = PORTD;
+		portb_state = PORTB & 0x63;
+
+		// Print state of all the digital pins
+		Serial.print(((PORTB) >> (PORTD5)) & 0x01);
+		Serial.print(((PORTB) >> (PORTD4)) & 0x01);
+		Serial.print(' ');
+		Serial.print(((PORTB) >> (PORTB3)) & 0x01);
+		Serial.print(((PORTB) >> (PORTB2)) & 0x01);
+		Serial.print(((PORTB) >> (PORTB1)) & 0x01);
+		Serial.print(((PORTB) >> (PORTB0)) & 0x01);
+		Serial.print(' ');
+		Serial.print(((PORTD) >> (PORTD7)) & 0x01);
+		Serial.print(((PORTD) >> (PORTD6)) & 0x01);
+		Serial.print(((PORTD) >> (PORTD5)) & 0x01);
+		Serial.print(((PORTD) >> (PORTD4)) & 0x01);
+		Serial.print(' ');
+		Serial.print(((PORTD) >> (PORTD3)) & 0x01);
+		Serial.print(((PORTD) >> (PORTD2)) & 0x01);
+		Serial.print(((PORTD) >> (PORTD1)) & 0x01);
+		Serial.print(((PORTD) >> (PORTD0)) & 0x01);
+		Serial.println();
+	}
+
+
+
+
+}
+
 void setup() {
 //	blink_setup();
-	blink2_setup();
-	serial_setup();
+//	blink2_setup();
+//	serial_setup();
+	debug_setup();
 }
 
 void loop() {
 //	blink_loop();
-	blink2_loop();
-	serial_loop();
+//	blink2_loop();
+//	serial_loop();
+	debug_loop();
 }
 
 
