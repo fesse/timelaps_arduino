@@ -135,24 +135,46 @@ void debug_loop() {
 		Serial.print(((PORTD) >> (PORTD0)) & 0x01);
 		Serial.println();
 	}
-
-
-
-
 }
+
+void blink3_setup() {
+	pinMode(8, OUTPUT);
+	pinMode(7, OUTPUT);
+}
+
+
+void blink3_loop() {
+	cnt++;
+	if (cnt == 500000) {
+		cnt = 0;
+		digitalWrite(8, d8on?LOW:HIGH);
+		d8on = !d8on;
+	}
+
+	if (cnt == 100000) {
+		digitalWrite(7, d7on?LOW:HIGH);
+		d7on = !d7on;
+	}
+}
+
+Debug debug;
 
 void setup() {
 //	blink_setup();
 //	blink2_setup();
 //	serial_setup();
-	debug_setup();
+//	debug_setup();
+	blink3_setup();
+	debug.init();
 }
 
 void loop() {
 //	blink_loop();
 //	blink2_loop();
 //	serial_loop();
-	debug_loop();
+//	debug_loop();
+	blink3_loop();
+	debug.dumpState();
 }
 
 

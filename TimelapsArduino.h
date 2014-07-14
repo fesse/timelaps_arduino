@@ -13,6 +13,7 @@
 
 #include "HardwareSerial.h"
 #include "Arduino.h"
+#include "Debug.h"
 
 
 //end of add your includes here
