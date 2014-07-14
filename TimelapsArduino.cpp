@@ -159,13 +159,20 @@ void blink3_loop() {
 
 Debug debug;
 
+
+State* state = NULL;
+Menu* menu = NULL;
+
 void setup() {
 //	blink_setup();
 //	blink2_setup();
 //	serial_setup();
 //	debug_setup();
 	blink3_setup();
-	debug.init();
+//	debug.init();
+	state = new State();
+	menu = new Menu(state);
+	menu->init();
 }
 
 void loop() {
@@ -174,10 +181,10 @@ void loop() {
 //	serial_loop();
 //	debug_loop();
 	blink3_loop();
-	debug.dumpState();
+//	debug.dumpState();
+
+	if (menu->hasInput()) {
+		menu->parseInput();
+	}
 }
-
-
-
-
 

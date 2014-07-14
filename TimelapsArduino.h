@@ -13,8 +13,10 @@
 
 #include "HardwareSerial.h"
 #include "Arduino.h"
-#include "Debug.h"
 
+#include "Debug.h"
+#include "Menu.h"
+#include "State.h"
 
 //end of add your includes here
 #ifdef __cplusplus

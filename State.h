@@ -9,18 +9,35 @@
 #define STATE_H_
 
 class State {
-	bool led1;
-	bool led2;
-
 public:
-	bool isEqual(State otherState);
-	void toggleLed1(bool on);
-	void toggleLed2(bool on);
+	State();
+	void setTotalNbrOfPhotos(long nbrOfPhotos);
+	int getTotalNbrOfPhotos();
+	void setExposureWaitTime(long waitTime);
+	long getExposureWaitTime();
+	void setSpeed(int trolleySpeed);
+	int getSpeed();
+	void setDirection(int newDirection);
+	int getDirection();
+	void moveToStartPosition();
+	void start();
+	void stop();
+	int getRunState();
 
-	bool getLed1State();
-	bool getLed2State();
+	static const int LEFT = 0;
+	static const int RIGHT = 1;
 
-	void updateFrom(State newState);
+	static const int STATE_IDLE = 0;
+	static const int STATE_MOVETOSTARTPOSITION = 1;
+	static const int STATE_RUNNING = 2;
+
+private:
+	long totalNbrOfPhotos;
+	long exposureWaitTime; // [ms]
+	int speed; // [cm/h]
+	int direction; // LEFT|RIGHT
+
+	int runState;
 };
 
 #endif /* STATE_H_ */

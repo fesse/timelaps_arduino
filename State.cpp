@@ -6,35 +6,59 @@
  */
 #include "State.h"
 
-void State::toggleLed1(bool on) {
-	led1 = on;
+State::State(){
+	totalNbrOfPhotos = 0;
+	exposureWaitTime = 0;
+	speed = 0;
+	direction = LEFT;
+
+	runState = STATE_IDLE;
 }
 
-void State::toggleLed2(bool on) {
-	led2 = on;
+void State::setTotalNbrOfPhotos(long nbrOfPhotos) {
+	totalNbrOfPhotos = nbrOfPhotos;
 }
 
-bool State::isEqual(State otherState) {
-	if (led1 != otherState.led1) {
-		return false;
-	}
-	if (led2 != otherState.led2) {
-		return false;
-	}
-
-	return true;
+int State::getTotalNbrOfPhotos() {
+	return totalNbrOfPhotos;
 }
 
-
-void State::updateFrom(State otherState) {
-	led1 = otherState.getLed1State();
-	led2 = otherState.getLed2State();
+void State::setExposureWaitTime(long waitTime) {
+	exposureWaitTime = waitTime;
 }
 
-bool State::getLed1State() {
-	return led1;
+long State::getExposureWaitTime() {
+	return exposureWaitTime;
 }
 
-bool State::getLed2State() {
-	return led2;
+void State::setSpeed(int trolleySpeed) {
+	speed = trolleySpeed;
+}
+
+int State::getSpeed() {
+	return speed;
+}
+
+void State::setDirection(int newDirection) {
+	direction = newDirection;
+}
+
+int State::getDirection() {
+	return direction;
+}
+
+void State::moveToStartPosition() {
+	runState = STATE_MOVETOSTARTPOSITION;
+}
+
+void State::start() {
+	runState = STATE_RUNNING;
+}
+
+void State::stop() {
+	runState = STATE_IDLE;
+}
+
+int State::getRunState() {
+	return runState;
 }
