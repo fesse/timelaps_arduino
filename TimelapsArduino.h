@@ -17,6 +17,8 @@
 #include "Debug.h"
 #include "Menu.h"
 #include "State.h"
+#include "HardwareAdapter.h"
+#include "SerialAdapter.h"
 
 //end of add your includes here
 #ifdef __cplusplus

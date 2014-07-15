@@ -21,6 +21,9 @@ public:
 	void motor(bool on);
 	void motorDirection(bool left);
 
+	long getCurrentOutputState();
+	long getCurrentInputState();
+
 private:
 
 	static const int EMERGENCY_STOP = 4;  // LOW active

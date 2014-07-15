@@ -1,0 +1,14 @@
+Portd
+7 - 8  Led 1
+6 - 7  Motor right
+5 - 6  Motor run
+
+--> 11100000 --> 0xE0
+
+Port b
+13 - 6  Shutter
+12 - 5  Focus
+11 - 4  Motor left
+8 - 1  Led 2
+
+--> 00111001 --> 0x39

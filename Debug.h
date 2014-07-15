@@ -8,9 +8,9 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-#include "HardwareSerial.h"
-//#include <avr/io.h>
 #include "Arduino.h"
+
+#include "SerialAdapter.h"
 
 class Debug {
 public:

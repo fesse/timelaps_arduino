@@ -8,17 +8,19 @@
 #ifndef MENU_H_
 #define MENU_H_
 
-#include "HardwareSerial.h"
 #include "Arduino.h"
-#include <State.h>
+
+#include "SerialAdapter.h"
+#include "State.h"
+
 
 class Menu {
 public:
 	Menu(State* state);
 	void init();
-	bool hasInput();
 	void parseInput();
 private:
+	bool hasInput();
 	void printMenu();
 	void setNbrPhotos(String data);
 	void setExposureWaitTime(String data);

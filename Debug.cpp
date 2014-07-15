@@ -16,7 +16,7 @@ Debug::~Debug() {
 }
 
 void Debug::init() {
-	Serial.begin(9600);
+	SerialAdapter::init();
 	Serial.println("Timelaps Arduino debug console");
 }
 

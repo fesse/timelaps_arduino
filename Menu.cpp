@@ -13,7 +13,7 @@ Menu::Menu(State* currentState) {
 }
 
 void Menu::init() {
-	Serial.begin(9600);
+	SerialAdapter::init();
 	printMenu();
 }
 
@@ -25,9 +25,9 @@ void Menu::printMenu() {
 	Serial.println("3. Set speed");
 	Serial.println("4. Set trolley direction");
 	Serial.println("5. Move trolley to start position");
-	Serial.println("6. Print status");
-	Serial.println("8. Start");
-	Serial.println("9. Stop");
+	Serial.println("6. Start");
+	Serial.println("7. Stop");
+	Serial.println("9. Print status");
 }
 
 bool Menu::hasInput() {
@@ -35,10 +35,12 @@ bool Menu::hasInput() {
 }
 
 void Menu::parseInput() {
+	if (!hasInput()) {
+		return;
+	}
 	String data = Serial.readString();
 	if (currentMenuChoice != MENU_NONE) {
 		handleSubInput(data);
-		printMenu();
 		return;
 	}
 	switch (data.toInt()) {
@@ -65,15 +67,16 @@ void Menu::parseInput() {
 			resetTrolley();
 			break;
 		case 6:
-			printStatus();
-			break;
-		case 8:
 			start();
 			break;
-		case 9:
+		case 7:
 			stop();
 			break;
+		case 9:
+			printStatus();
+			break;
 		default:
+			printMenu();
 			break;
 	}
 }
