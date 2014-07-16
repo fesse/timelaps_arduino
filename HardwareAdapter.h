@@ -26,7 +26,7 @@ public:
 
 private:
 
-	static const int EMERGENCY_STOP = 4;  // LOW active
+	static const int EMERGENCY_STOP = 4;  // Low active
 	static const int END_POSITION = 10;
 
 	static const int LED1 = 7;

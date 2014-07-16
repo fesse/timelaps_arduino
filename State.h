@@ -24,6 +24,8 @@ public:
 	void stop();
 	int getRunState();
 
+	int getNbrOfPhotosTaken();
+
 	static const int LEFT = 0;
 	static const int RIGHT = 1;
 
@@ -38,6 +40,8 @@ private:
 	int direction; // LEFT|RIGHT
 
 	int runState;
+
+	int nbrOfPhotosTaken;
 };
 
 #endif /* STATE_H_ */

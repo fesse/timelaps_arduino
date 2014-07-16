@@ -19,6 +19,7 @@
 #include "State.h"
 #include "HardwareAdapter.h"
 #include "SerialAdapter.h"
+#include "Logic.h"
 
 //end of add your includes here
 #ifdef __cplusplus

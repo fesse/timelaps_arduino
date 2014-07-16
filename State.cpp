@@ -13,6 +13,8 @@ State::State(){
 	direction = LEFT;
 
 	runState = STATE_IDLE;
+
+	nbrOfPhotosTaken = 0;
 }
 
 void State::setTotalNbrOfPhotos(long nbrOfPhotos) {
@@ -61,4 +63,8 @@ void State::stop() {
 
 int State::getRunState() {
 	return runState;
+}
+
+int State::getNbrOfPhotosTaken() {
+	return nbrOfPhotosTaken;
 }

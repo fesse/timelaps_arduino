@@ -58,3 +58,8 @@ void HardwareAdapter::motorDirection(bool left) {
 long HardwareAdapter::getCurrentOutputState() {
 	return (PORTB & 0x39) << 8 | (PORTD & 0xE0); // 0011 1001 1110 0000
 }
+
+long HardwareAdapter::getCurrentInputState() {
+	// TODO: implement
+	return 0;
+}
