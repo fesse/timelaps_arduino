@@ -23,7 +23,7 @@ private:
 
 	int logicState;
 
-	bool isTimeElapsed(unsigned long time);
+	bool hasTimeElapsed(unsigned long time);
 	void setTimeMarker();
 	void resetHardware();
 
@@ -31,6 +31,8 @@ private:
 	static const int LOGIC_MOVE_FORWARD = 1;
 	static const int LOGIC_TAKE_PHOTO = 2;
 	static const int LOGIC_TAKING_PHOTO = 3;
+	static const int LOGIC_WAITING = 4;
+	static const int LOGIC_MOVE_BACKWARD = 5;
 
 	static const int SPEED_FACTOR = 10; // cm/h -> time
 };

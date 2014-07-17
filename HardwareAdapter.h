@@ -17,13 +17,16 @@ public:
 	void led1(bool on);
 	void led1blink();
 	void led2(bool on);
+	void led2blink();
 	void focus(bool on);
 	void shutter(bool on);
 	void motor(bool on);
 	void motorDirection(bool left);
 
-	long getCurrentOutputState();
-	long getCurrentInputState();
+	bool atEndPosition();
+	bool emergencyStop();
+
+//	long getCurrentOutputState();
 
 private:
 
@@ -39,12 +42,15 @@ private:
 	static const int FOCUS = 12;
 	static const int SHUTTER = 13;
 
-	unsigned long timeMarker;
+	unsigned long timeMarker1;
+	unsigned long timeMarker2;
 	int led1fadeAmount;
 	int led1brightness;
+	int led2fadeAmount;
+	int led2brightness;
 
-	void setTimeMarker();
-	bool isTimeElapsed(unsigned long time);
+	void setTimeMarker(int ledNumber);
+	bool hasTimeElapsed(int ledNumber, unsigned long time);
 };
 
 #endif /* HARDWAREADAPTER_H_ */

@@ -28,28 +28,59 @@ void Logic::resetHardware() {
 
 void Logic::run() {
 
+	// Check emergency stop
+	if (hardwareAdapter.emergencyStop()) {
+		state->setRunState(State::STATE_STOP);
+	}
+
 	switch (state->getRunState()) {
+
+		case State::STATE_IDLE : {
+			hardwareAdapter.led1blink();
+			return;
+		}
 
 		case State::STATE_START : {
 			resetHardware();
+
 			state->setNbrOfPhotosTaken(0);
 			state->setRunState(State::STATE_RUNNING);
+			logicState = LOGIC_IDLE;
+
 			return;
 		}
 
 		case State::STATE_STOP : {
 			resetHardware();
-			hardwareAdapter.led1(true);
+
 			state->setRunState(State::STATE_IDLE);
+			logicState = LOGIC_IDLE;
+
 			return;
 		}
 
 
+		case State::STATE_MOVE_TO_START_POSITION : {
+			resetHardware();
+
+			state->setRunState(State::STATE_MOVING_TO_START_POSITION);
+			logicState = LOGIC_IDLE;
+
+			return;
+		}
+
 		case State::STATE_RUNNING : {
+
+			if (hardwareAdapter.atEndPosition()) {
+				Serial.println("end");
+				state->setRunState(State::STATE_STOP);
+				return;
+			}
 
 			switch (logicState) {
 				case LOGIC_MOVE_FORWARD : {
-					if (!isTimeElapsed(state->getSpeed() * SPEED_FACTOR)) {
+
+					if (!hasTimeElapsed(state->getSpeed() * SPEED_FACTOR)) {
 						return;
 					}
 
@@ -62,7 +93,7 @@ void Logic::run() {
 
 				case LOGIC_TAKE_PHOTO : {
 					// Wait for trolley to settle
-					if (!isTimeElapsed(50)) {
+					if (!hasTimeElapsed(50)) {
 						return;
 					}
 
@@ -73,44 +104,98 @@ void Logic::run() {
 				}
 
 				case LOGIC_TAKING_PHOTO : {
-					if (!isTimeElapsed(50)) {
+					if (!hasTimeElapsed(50)) {
 						return;
 					}
 
 					setTimeMarker();
 					hardwareAdapter.shutter(false);
 					state->setNbrOfPhotosTaken(state->getNbrOfPhotosTaken()+1);
-					logicState = LOGIC_IDLE;
+					logicState = LOGIC_WAITING;
+					return;
+				}
+
+				case LOGIC_WAITING : {
+					if (!hasTimeElapsed(state->getExposureWaitTime())) {
+						return;
+					}
+
+					setTimeMarker();
+					hardwareAdapter.motor(true);
+					hardwareAdapter.led2(true);
+					logicState = LOGIC_MOVE_FORWARD;
+
+					// Done ?
+					if (state->getNbrOfPhotosTaken() == state->getTotalNbrOfPhotos()){
+						state->setRunState(State::STATE_STOP);
+					}
+					return;
+				}
+
+				case LOGIC_IDLE : {
+					logicState = LOGIC_MOVE_FORWARD;
 					return;
 				}
 			}
 
-			// Done ?
-			if (state->getNbrOfPhotosTaken() == state->getTotalNbrOfPhotos()){
-				state->setRunState(State::STATE_STOP);
-				return;
-			}
-
-			// Wait time over ?
-			if (!isTimeElapsed(state->getExposureWaitTime())) {
-				return;
-			}
-
-			// Move forward
-			setTimeMarker();
-			hardwareAdapter.motor(true);
-			hardwareAdapter.led2(true);
-			logicState = LOGIC_MOVE_FORWARD;
 			return;
 		}
 
-		case State::STATE_MOVE_TO_START_POSITION : {
+		case State::STATE_MOVING_TO_START_POSITION : {
 
-			return;
-		}
+			hardwareAdapter.led2blink();
 
-		case State::STATE_IDLE : {
-			hardwareAdapter.led1(true);
+			switch(logicState) {
+
+				case LOGIC_IDLE : {
+
+					// Check so that we don't have a signal from an end relay
+					if (hardwareAdapter.atEndPosition()) {
+						state->setRunState(State::STATE_STOP);
+						return;
+					}
+
+					// Move the opposite direction
+					hardwareAdapter.motorDirection(!state->getDirection());
+					hardwareAdapter.motor(true);
+
+					logicState = LOGIC_MOVE_BACKWARD;
+					return;
+				}
+
+				case LOGIC_MOVE_BACKWARD : {
+					// Check so that we don't have a signal from an end relay
+					if (!hardwareAdapter.atEndPosition()) {
+						return;
+					}
+
+					hardwareAdapter.motor(false);
+					setTimeMarker();
+					logicState = LOGIC_WAITING;;
+					return;
+				}
+
+				case LOGIC_WAITING : {
+					if (!hasTimeElapsed(300)) {
+						return;
+					}
+
+					// Move the opposite direction until we don't get the signal anymore
+					hardwareAdapter.motorDirection(state->getDirection());
+					hardwareAdapter.motor(true);
+					logicState = LOGIC_MOVE_FORWARD;
+					return;
+				}
+
+				case LOGIC_MOVE_FORWARD : {
+					if (hardwareAdapter.atEndPosition()) {
+						return;
+					}
+					state->setRunState(State::STATE_STOP);
+					return;
+				}
+			}
+
 			return;
 		}
 	}
@@ -120,6 +205,6 @@ void Logic::setTimeMarker() {
 	timeMarker = micros() / 1000;
 }
 
-bool Logic::isTimeElapsed(unsigned long time) {
+bool Logic::hasTimeElapsed(unsigned long time) {
 	return micros()/1000 - timeMarker > time;
 }

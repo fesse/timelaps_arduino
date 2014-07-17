@@ -4,7 +4,7 @@ State* state = NULL;
 Menu* menu = NULL;
 
 Logic* logic = NULL;
-Debug debug;
+//Debug debug;
 
 void setup() {
 
@@ -17,7 +17,7 @@ void setup() {
 	logic = new Logic(state);
 	logic->init();
 
-	debug.init();
+//	debug.init();
 }
 
 void loop() {
@@ -26,5 +26,5 @@ void loop() {
 
 	logic->run();
 
-	debug.dumpState();
+//	debug.dumpState();
 }

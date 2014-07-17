@@ -8,9 +8,12 @@
 #include "HardwareAdapter.h"
 
 HardwareAdapter::HardwareAdapter() {
-	timeMarker = 0;
+	timeMarker1 = 0;
+	timeMarker2 = 0;
 	led1brightness = 255;
 	led1fadeAmount = 5;
+	led2brightness = 255;
+	led2fadeAmount = 5;
 }
 
 void HardwareAdapter::init() {
@@ -33,15 +36,27 @@ void HardwareAdapter::led1(bool on) {
 }
 
 void HardwareAdapter::led1blink() {
-	if (!isTimeElapsed(30)) {
+	if (!hasTimeElapsed(1, 30)) {
 		return;
 	}
-	setTimeMarker();
+	setTimeMarker(1);
 	if (led1brightness == 0 || led1brightness == 255) {
 		led1fadeAmount = -led1fadeAmount;
 	}
 	led1brightness += led1fadeAmount;
 	analogWrite(LED1, led1brightness);
+}
+
+void HardwareAdapter::led2blink() {
+	if (!hasTimeElapsed(2, 10)) {
+		return;
+	}
+	setTimeMarker(2);
+	if (led2brightness == 0 || led2brightness == 255) {
+		led2fadeAmount = -led2fadeAmount;
+	}
+	led2brightness += led2fadeAmount;
+	analogWrite(LED2, led2brightness);
 }
 
 void HardwareAdapter::led2(bool on) {
@@ -70,19 +85,34 @@ void HardwareAdapter::motorDirection(bool left) {
 	}
 }
 
-long HardwareAdapter::getCurrentOutputState() {
-	return (PORTB & 0x39) << 8 | (PORTD & 0xE0); // 0011 1001 1110 0000
+bool HardwareAdapter::atEndPosition() {
+	return digitalRead(END_POSITION) == HIGH;
 }
 
-long HardwareAdapter::getCurrentInputState() {
-	// TODO: implement
-	return 0;
+bool HardwareAdapter::emergencyStop() {
+	return digitalRead(EMERGENCY_STOP) == LOW;
 }
 
-void HardwareAdapter::setTimeMarker() {
-	timeMarker = micros() / 1000;
+//long HardwareAdapter::getCurrentOutputState() {
+//	return (PORTB & 0x39) << 8 | (PORTD & 0xE0); // 0011 1001 1110 0000
+//}
+
+void HardwareAdapter::setTimeMarker(int ledNumber) {
+	if (ledNumber == 1) {
+		timeMarker1 = micros() / 1000;
+	} else if (ledNumber == 2) {
+		timeMarker2 = micros() / 1000;
+	}
 }
 
-bool HardwareAdapter::isTimeElapsed(unsigned long time) {
-	return micros()/1000 - timeMarker > time;
+bool HardwareAdapter::hasTimeElapsed(int ledNumber, unsigned long time) {
+	if (ledNumber == 1) {
+		return micros()/1000 - timeMarker1 > time;
+	} else if (ledNumber == 2) {
+		return micros()/1000 - timeMarker2 > time;
+	}
+
+	// Should never happen
+	return true;
 }
+
