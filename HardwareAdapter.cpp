@@ -8,6 +8,9 @@
 #include "HardwareAdapter.h"
 
 HardwareAdapter::HardwareAdapter() {
+	timeMarker = 0;
+	led1brightness = 255;
+	led1fadeAmount = 5;
 }
 
 void HardwareAdapter::init() {
@@ -27,6 +30,18 @@ void HardwareAdapter::init() {
 
 void HardwareAdapter::led1(bool on) {
 	digitalWrite(LED1, on?HIGH:LOW);
+}
+
+void HardwareAdapter::led1blink() {
+	if (!isTimeElapsed(30)) {
+		return;
+	}
+	setTimeMarker();
+	if (led1brightness == 0 || led1brightness == 255) {
+		led1fadeAmount = -led1fadeAmount;
+	}
+	led1brightness += led1fadeAmount;
+	analogWrite(LED1, led1brightness);
 }
 
 void HardwareAdapter::led2(bool on) {
@@ -62,4 +77,12 @@ long HardwareAdapter::getCurrentOutputState() {
 long HardwareAdapter::getCurrentInputState() {
 	// TODO: implement
 	return 0;
+}
+
+void HardwareAdapter::setTimeMarker() {
+	timeMarker = micros() / 1000;
+}
+
+bool HardwareAdapter::isTimeElapsed(unsigned long time) {
+	return micros()/1000 - timeMarker > time;
 }

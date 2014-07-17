@@ -7,9 +7,9 @@
 #include "State.h"
 
 State::State(){
-	totalNbrOfPhotos = 0;
-	exposureWaitTime = 0;
-	speed = 0;
+	totalNbrOfPhotos = 5;
+	exposureWaitTime = 1000;
+	speed = 100;
 	direction = LEFT;
 
 	runState = STATE_IDLE;
@@ -49,22 +49,18 @@ int State::getDirection() {
 	return direction;
 }
 
-void State::moveToStartPosition() {
-	runState = STATE_MOVETOSTARTPOSITION;
-}
-
-void State::start() {
-	runState = STATE_RUNNING;
-}
-
-void State::stop() {
-	runState = STATE_IDLE;
-}
-
 int State::getRunState() {
 	return runState;
 }
 
+void State::setRunState(int newRunState) {
+	runState = newRunState;
+}
+
 int State::getNbrOfPhotosTaken() {
 	return nbrOfPhotosTaken;
+}
+
+void State::setNbrOfPhotosTaken(int nbr) {
+	nbrOfPhotosTaken = nbr;
 }

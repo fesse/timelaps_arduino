@@ -25,13 +25,14 @@ private:
 
 	bool isTimeElapsed(unsigned long time);
 	void setTimeMarker();
+	void resetHardware();
 
 	static const int LOGIC_IDLE = 0;
 	static const int LOGIC_MOVE_FORWARD = 1;
 	static const int LOGIC_TAKE_PHOTO = 2;
 	static const int LOGIC_TAKING_PHOTO = 3;
 
-	static const int SPEED_FACTOR = 100; // cm/h -> time
+	static const int SPEED_FACTOR = 10; // cm/h -> time
 };
 
 #endif /* LOGIC_H_ */

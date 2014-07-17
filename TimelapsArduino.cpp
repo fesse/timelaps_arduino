@@ -20,9 +20,6 @@ void setup() {
 	debug.init();
 }
 
-long cnt = 0;
-bool led1 = false;
-
 void loop() {
 
 	menu->parseInput();
@@ -31,6 +28,3 @@ void loop() {
 
 	debug.dumpState();
 }
-
-
-

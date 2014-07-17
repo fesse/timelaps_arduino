@@ -15,6 +15,7 @@ public:
 	HardwareAdapter();
 	void init();
 	void led1(bool on);
+	void led1blink();
 	void led2(bool on);
 	void focus(bool on);
 	void shutter(bool on);
@@ -38,6 +39,12 @@ private:
 	static const int FOCUS = 12;
 	static const int SHUTTER = 13;
 
+	unsigned long timeMarker;
+	int led1fadeAmount;
+	int led1brightness;
+
+	void setTimeMarker();
+	bool isTimeElapsed(unsigned long time);
 };
 
 #endif /* HARDWAREADAPTER_H_ */

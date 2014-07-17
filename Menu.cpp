@@ -121,15 +121,15 @@ void Menu::setDirection(String data) {
 }
 
 void Menu::resetTrolley() {
-	state->moveToStartPosition();
+	state->setRunState(State::STATE_MOVE_TO_START_POSITION);
 }
 
 void Menu::start() {
-	state->start();
+	state->setRunState(State::STATE_START);
 }
 
 void Menu::stop() {
-	state->stop();
+	state->setRunState(State::STATE_STOP);
 }
 
 void Menu::printStatus() {
@@ -147,4 +147,6 @@ void Menu::printStatus() {
 	Serial.println(state->getDirection() == State::LEFT ? "Left":"Right");
 	Serial.print("Run state: ");
 	Serial.println(state->getRunState());
+	Serial.print("Nbr of photos taken: ");
+	Serial.println(state->getNbrOfPhotosTaken());
 }
