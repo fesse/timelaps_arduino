@@ -27,8 +27,8 @@ public:
 	int getNbrOfPhotosTaken();
 
 
-	static const int LEFT = 0;
-	static const int RIGHT = 1;
+	static const int RIGHT = 0;
+	static const int LEFT = 1;
 
 	static const int STATE_IDLE = 0;
 	static const int STATE_MOVE_TO_START_POSITION = 1;
