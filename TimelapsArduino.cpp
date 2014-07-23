@@ -17,7 +17,7 @@ void setup() {
 	logic = new Logic(state);
 	logic->init();
 
-//	debug.init();
+// 	debug.init();
 }
 
 void loop() {

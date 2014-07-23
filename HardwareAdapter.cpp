@@ -7,13 +7,8 @@
 
 #include "HardwareAdapter.h"
 
+
 HardwareAdapter::HardwareAdapter() {
-	timeMarker1 = 0;
-	timeMarker2 = 0;
-	led1brightness = 255;
-	led1fadeAmount = 5;
-	led2brightness = 255;
-	led2fadeAmount = 5;
 }
 
 void HardwareAdapter::init() {
@@ -29,38 +24,33 @@ void HardwareAdapter::init() {
 	pinMode(MOTOR_RUN, OUTPUT);
 	pinMode(MOTOR_LEFT, OUTPUT);
 	pinMode(MOTOR_RIGHT, OUTPUT);
+
+	myLed1.init(LED1, 30);
+	myLed2.init(LED2, 5);
 }
 
 void HardwareAdapter::led1(bool on) {
-	digitalWrite(LED1, on?HIGH:LOW);
+	if (on) {
+		myLed1.on();
+	} else {
+		myLed1.off();
+	}
 }
 
 void HardwareAdapter::led1blink() {
-	if (!hasTimeElapsed(1, 30)) {
-		return;
-	}
-	setTimeMarker(1);
-	if (led1brightness == 0 || led1brightness == 255) {
-		led1fadeAmount = -led1fadeAmount;
-	}
-	led1brightness += led1fadeAmount;
-	analogWrite(LED1, led1brightness);
+	myLed1.blink();
 }
 
 void HardwareAdapter::led2blink() {
-	if (!hasTimeElapsed(2, 10)) {
-		return;
-	}
-	setTimeMarker(2);
-	if (led2brightness == 0 || led2brightness == 255) {
-		led2fadeAmount = -led2fadeAmount;
-	}
-	led2brightness += led2fadeAmount;
-	analogWrite(LED2, led2brightness);
+	myLed2.blink();
 }
 
 void HardwareAdapter::led2(bool on) {
-	digitalWrite(LED2, on?HIGH:LOW);
+	if (on) {
+		myLed2.on();
+	} else {
+		myLed2.off();
+	}
 }
 
 void HardwareAdapter::focus(bool on) {
@@ -71,8 +61,8 @@ void HardwareAdapter::shutter(bool on) {
 	digitalWrite(SHUTTER, on?HIGH:LOW);
 }
 
-void HardwareAdapter::motor(bool on) {
-	digitalWrite(MOTOR_RUN, on?HIGH:LOW);
+void HardwareAdapter::motor(int speed) {
+	analogWrite(MOTOR_RUN, speed);
 }
 
 void HardwareAdapter::motorDirection(bool left) {
@@ -97,22 +87,7 @@ bool HardwareAdapter::emergencyStop() {
 //	return (PORTB & 0x39) << 8 | (PORTD & 0xE0); // 0011 1001 1110 0000
 //}
 
-void HardwareAdapter::setTimeMarker(int ledNumber) {
-	if (ledNumber == 1) {
-		timeMarker1 = micros() / 1000;
-	} else if (ledNumber == 2) {
-		timeMarker2 = micros() / 1000;
-	}
+void HardwareAdapter::update() {
+	myLed1.update();
+	myLed2.update();
 }
-
-bool HardwareAdapter::hasTimeElapsed(int ledNumber, unsigned long time) {
-	if (ledNumber == 1) {
-		return micros()/1000 - timeMarker1 > time;
-	} else if (ledNumber == 2) {
-		return micros()/1000 - timeMarker2 > time;
-	}
-
-	// Should never happen
-	return true;
-}
-

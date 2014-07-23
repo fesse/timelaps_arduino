@@ -9,6 +9,7 @@
 #define HARDWAREADAPTER_H_
 
 #include "Arduino.h"
+#include "Led.h"
 
 class HardwareAdapter {
 public:
@@ -20,11 +21,13 @@ public:
 	void led2blink();
 	void focus(bool on);
 	void shutter(bool on);
-	void motor(bool on);
+	void motor(int speed);
 	void motorDirection(bool left);
 
 	bool atEndPosition();
 	bool emergencyStop();
+
+	void update();
 
 //	long getCurrentOutputState();
 
@@ -33,8 +36,8 @@ private:
 	static const int EMERGENCY_STOP = 4;  // Low active
 	static const int END_POSITION = 10;
 
-	static const int LED1 = 7;
-	static const int LED2 = 8;
+	static const int LED1 = 3;
+	static const int LED2 = 9;
 	static const int MOTOR_RUN = 5;
 
 	static const int MOTOR_LEFT = 11;
@@ -42,15 +45,10 @@ private:
 	static const int FOCUS = 12;
 	static const int SHUTTER = 13;
 
-	unsigned long timeMarker1;
-	unsigned long timeMarker2;
-	int led1fadeAmount;
-	int led1brightness;
-	int led2fadeAmount;
-	int led2brightness;
+	Led myLed1;
+	Led myLed2;
 
-	void setTimeMarker(int ledNumber);
-	bool hasTimeElapsed(int ledNumber, unsigned long time);
+
 };
 
 #endif /* HARDWAREADAPTER_H_ */

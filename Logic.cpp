@@ -15,6 +15,8 @@ Logic::Logic(State* currentState) {
 
 void Logic::init() {
 	hardwareAdapter.init();
+	resetHardware();
+	hardwareAdapter.led1blink();
 }
 
 void Logic::resetHardware() {
@@ -22,11 +24,13 @@ void Logic::resetHardware() {
 	hardwareAdapter.led2(false);
 	hardwareAdapter.focus(false);
 	hardwareAdapter.shutter(false);
-	hardwareAdapter.motorDirection(state->getDirection()==State::LEFT);
-	hardwareAdapter.motor(false);
+	hardwareAdapter.motorDirection(state->getDirection());
+	hardwareAdapter.motor(0);
 }
 
 void Logic::run() {
+
+	hardwareAdapter.update();
 
 	// Check emergency stop
 	if (hardwareAdapter.emergencyStop()) {
@@ -36,7 +40,6 @@ void Logic::run() {
 	switch (state->getRunState()) {
 
 		case State::STATE_IDLE : {
-			hardwareAdapter.led1blink();
 			return;
 		}
 
@@ -52,10 +55,9 @@ void Logic::run() {
 
 		case State::STATE_STOP : {
 			resetHardware();
-
 			state->setRunState(State::STATE_IDLE);
+			hardwareAdapter.led1blink();
 			logicState = LOGIC_IDLE;
-
 			return;
 		}
 
@@ -72,7 +74,6 @@ void Logic::run() {
 		case State::STATE_RUNNING : {
 
 			if (hardwareAdapter.atEndPosition()) {
-				Serial.println("end");
 				state->setRunState(State::STATE_STOP);
 				return;
 			}
@@ -85,7 +86,7 @@ void Logic::run() {
 					}
 
 					setTimeMarker();
-					hardwareAdapter.motor(false);
+					hardwareAdapter.motor(0);
 					hardwareAdapter.led2(false);
 					logicState = LOGIC_TAKE_PHOTO;
 					return;
@@ -93,7 +94,7 @@ void Logic::run() {
 
 				case LOGIC_TAKE_PHOTO : {
 					// Wait for trolley to settle
-					if (!hasTimeElapsed(50)) {
+					if (!hasTimeElapsed(500)) {
 						return;
 					}
 
@@ -121,7 +122,7 @@ void Logic::run() {
 					}
 
 					setTimeMarker();
-					hardwareAdapter.motor(true);
+					hardwareAdapter.motor(100);
 					hardwareAdapter.led2(true);
 					logicState = LOGIC_MOVE_FORWARD;
 
@@ -143,7 +144,6 @@ void Logic::run() {
 
 		case State::STATE_MOVING_TO_START_POSITION : {
 
-			hardwareAdapter.led2blink();
 
 			switch(logicState) {
 
@@ -156,8 +156,9 @@ void Logic::run() {
 					}
 
 					// Move the opposite direction
+					hardwareAdapter.led2blink();
 					hardwareAdapter.motorDirection(!state->getDirection());
-					hardwareAdapter.motor(true);
+					hardwareAdapter.motor(255);
 
 					logicState = LOGIC_MOVE_BACKWARD;
 					return;
@@ -169,7 +170,7 @@ void Logic::run() {
 						return;
 					}
 
-					hardwareAdapter.motor(false);
+					hardwareAdapter.motor(0);
 					setTimeMarker();
 					logicState = LOGIC_WAITING;;
 					return;
@@ -182,7 +183,7 @@ void Logic::run() {
 
 					// Move the opposite direction until we don't get the signal anymore
 					hardwareAdapter.motorDirection(state->getDirection());
-					hardwareAdapter.motor(true);
+					hardwareAdapter.motor(100);
 					logicState = LOGIC_MOVE_FORWARD;
 					return;
 				}
@@ -200,6 +201,7 @@ void Logic::run() {
 		}
 	}
 }
+
 
 void Logic::setTimeMarker() {
 	timeMarker = micros() / 1000;
