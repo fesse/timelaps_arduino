@@ -11,9 +11,10 @@ Led::Led() {
 	pinNumber = -1;
 	waitTime = 30;
 	timeMarker = 0;
-	brightness = 255;
-	fadeAmount = 5;
 	isBlinking = false;
+	longWait = false;
+	fadeAmount=0;
+	brightness=0;
 }
 
 void Led::init(int ledNumber, int waitTimeMs){
@@ -32,6 +33,8 @@ void Led::off() {
 
 void Led::blink() {
 	isBlinking = true;
+	brightness = 0;
+	fadeAmount = -5;
 }
 
 void Led::setTimeMarker() {
@@ -46,16 +49,23 @@ void Led::update() {
 	if (!isBlinking) {
 		return;
 	}
-
-	if (!hasTimeElapsed(waitTime)) {
+	if (!hasTimeElapsed(longWait ? waitTime*10 : waitTime)) {
 		return;
 	}
+
 	setTimeMarker();
+
 	if (brightness == 0 || brightness == 255) {
 		fadeAmount = -fadeAmount;
 	}
-	brightness += fadeAmount;
+	longWait = false;
+	if (brightness == 0) {
+		longWait = true;
+	}
+
 	analogWrite(pinNumber, brightness);
+	brightness += fadeAmount;
+
 
 }
 

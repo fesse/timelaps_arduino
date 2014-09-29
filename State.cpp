@@ -7,9 +7,9 @@
 #include "State.h"
 
 State::State(){
-	totalNbrOfPhotos = 5;
+	totalNbrOfPhotos = 1000;
 	exposureWaitTime = 1000;
-	speed = 100;
+	motorRunTime = 100;
 	direction = LEFT;
 
 	runState = STATE_IDLE;
@@ -21,7 +21,7 @@ void State::setTotalNbrOfPhotos(long nbrOfPhotos) {
 	totalNbrOfPhotos = nbrOfPhotos;
 }
 
-int State::getTotalNbrOfPhotos() {
+long State::getTotalNbrOfPhotos() {
 	return totalNbrOfPhotos;
 }
 
@@ -33,12 +33,12 @@ long State::getExposureWaitTime() {
 	return exposureWaitTime;
 }
 
-void State::setSpeed(int trolleySpeed) {
-	speed = trolleySpeed;
+void State::setMotorRunTime(long motorRunTime) {
+	this->motorRunTime = motorRunTime;
 }
 
-int State::getSpeed() {
-	return speed;
+long State::getMotorRunTime() {
+	return motorRunTime;
 }
 
 void State::setDirection(int newDirection) {
@@ -57,7 +57,7 @@ void State::setRunState(int newRunState) {
 	runState = newRunState;
 }
 
-int State::getNbrOfPhotosTaken() {
+long State::getNbrOfPhotosTaken() {
 	return nbrOfPhotosTaken;
 }
 

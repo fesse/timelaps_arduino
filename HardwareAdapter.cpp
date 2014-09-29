@@ -26,7 +26,7 @@ void HardwareAdapter::init() {
 	pinMode(MOTOR_RIGHT, OUTPUT);
 
 	myLed1.init(LED1, 30);
-	myLed2.init(LED2, 5);
+	myLed2.init(LED2, 2);
 }
 
 void HardwareAdapter::led1(bool on) {

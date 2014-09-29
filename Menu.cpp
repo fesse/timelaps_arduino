@@ -14,6 +14,7 @@ Menu::Menu(State* currentState) {
 
 void Menu::init() {
 	SerialAdapter::init();
+	delay(500);
 	printMenu();
 }
 
@@ -22,7 +23,7 @@ void Menu::printMenu() {
 	Serial.println("0. Print menu");
 	Serial.println("1. Set number of photos");
 	Serial.println("2. Set exposure wait time");
-	Serial.println("3. Set speed");
+	Serial.println("3. Set motor run time");
 	Serial.println("4. Set trolley direction");
 	Serial.println("5. Move trolley to start position");
 	Serial.println("6. Start");
@@ -55,9 +56,9 @@ void Menu::parseInput() {
 			Serial.println("Enter wait time per photo [ms]");
 			currentMenuChoice = MENU_SET_EXPOSURE_TIME;
 			break;
-		case MENU_SET_SPEED:
-			Serial.println("Enter trolley speed [cm/h]");
-			currentMenuChoice = MENU_SET_SPEED;
+		case MENU_SET_MOTOR_RUN_TIME:
+			Serial.println("Enter trolley move time [ms]");
+			currentMenuChoice = MENU_SET_MOTOR_RUN_TIME;
 			break;
 		case MENU_SET_DIRECTION:
 			Serial.println("Enter trolley direction [L/R]");
@@ -89,8 +90,8 @@ void Menu::handleSubInput(String data){
 		case MENU_SET_EXPOSURE_TIME:
 			setExposureWaitTime(data);
 			break;
-		case MENU_SET_SPEED:
-			setSpeed(data);
+		case MENU_SET_MOTOR_RUN_TIME:
+			setMotorRunTime(data);
 			break;
 		case MENU_SET_DIRECTION:
 			setDirection(data);
@@ -107,8 +108,8 @@ void Menu::setExposureWaitTime(String data) {
 	state->setExposureWaitTime(data.toInt());
 }
 
-void Menu::setSpeed(String data) {
-	state->setSpeed(data.toInt());
+void Menu::setMotorRunTime(String data) {
+	state->setMotorRunTime(data.toInt());
 }
 
 void Menu::setDirection(String data) {
@@ -140,9 +141,9 @@ void Menu::printStatus() {
 	Serial.print("Exposure wait time: ");
 	Serial.print(state->getExposureWaitTime());
 	Serial.println(" [ms]");
-	Serial.print("Trolley speed: ");
-	Serial.print(state->getSpeed());
-	Serial.println(" [cm/h]");
+	Serial.print("Trolley move time: ");
+	Serial.print(state->getMotorRunTime());
+	Serial.println(" [ms]");
 	Serial.print("Trolley direction: ");
 	Serial.println(state->getDirection() == State::LEFT ? "Left":"Right");
 	Serial.print("Run state: ");

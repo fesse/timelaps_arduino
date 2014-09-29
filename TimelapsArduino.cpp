@@ -17,12 +17,14 @@ void setup() {
 	logic = new Logic(state);
 	logic->init();
 
-// 	debug.init();
+//	debug.init();
 }
 
 void loop() {
 
-	menu->parseInput();
+	if (logic->isSerialAllowed()) {
+		menu->parseInput();
+	}
 
 	logic->run();
 

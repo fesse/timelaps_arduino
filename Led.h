@@ -26,6 +26,7 @@ private:
 	int brightness;
 	int waitTime;
 	bool isBlinking;
+	bool longWait;
 
 	void setTimeMarker();
 	bool hasTimeElapsed(unsigned long time);

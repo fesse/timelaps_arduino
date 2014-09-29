@@ -16,6 +16,7 @@ public:
 	Logic(State* currentState);
 	void init();
 	void run();
+	bool isSerialAllowed();
 private:
 	State* state;
 	HardwareAdapter hardwareAdapter;
@@ -33,8 +34,6 @@ private:
 	static const int LOGIC_TAKING_PHOTO = 3;
 	static const int LOGIC_WAITING = 4;
 	static const int LOGIC_MOVE_BACKWARD = 5;
-
-	static const int SPEED_FACTOR = 10; // cm/h -> time
 };
 
 #endif /* LOGIC_H_ */

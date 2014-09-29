@@ -12,11 +12,11 @@ class State {
 public:
 	State();
 	void setTotalNbrOfPhotos(long nbrOfPhotos);
-	int getTotalNbrOfPhotos();
+	long getTotalNbrOfPhotos();
 	void setExposureWaitTime(long waitTime);
 	long getExposureWaitTime();
-	void setSpeed(int trolleySpeed);
-	int getSpeed();
+	void setMotorRunTime(long motorOnTime);
+	long getMotorRunTime();
 	void setDirection(int newDirection);
 	int getDirection();
 
@@ -24,7 +24,7 @@ public:
 	void setRunState(int runState);
 
 	void setNbrOfPhotosTaken(int nbr);
-	int getNbrOfPhotosTaken();
+	long getNbrOfPhotosTaken();
 
 
 	static const int RIGHT = 0;
@@ -40,12 +40,12 @@ public:
 private:
 	long totalNbrOfPhotos;
 	long exposureWaitTime; // [ms]
-	int speed; // [cm/h]
+	long motorRunTime; // [ms]
 	int direction; // LEFT|RIGHT
 
 	int runState;
 
-	int nbrOfPhotosTaken;
+	long nbrOfPhotosTaken;
 };
 
 #endif /* STATE_H_ */

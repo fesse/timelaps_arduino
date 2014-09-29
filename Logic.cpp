@@ -28,6 +28,19 @@ void Logic::resetHardware() {
 	hardwareAdapter.motor(0);
 }
 
+bool Logic::isSerialAllowed(){
+	int runState = state->getRunState();
+	if (runState == State::STATE_IDLE) {
+		return true;
+	}
+	if (runState == State::STATE_RUNNING) {
+		if (logicState == LOGIC_WAITING) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Logic::run() {
 
 	hardwareAdapter.update();
@@ -81,7 +94,7 @@ void Logic::run() {
 			switch (logicState) {
 				case LOGIC_MOVE_FORWARD : {
 
-					if (!hasTimeElapsed(state->getSpeed() * SPEED_FACTOR)) {
+					if (!hasTimeElapsed(state->getMotorRunTime())) {
 						return;
 					}
 
@@ -94,7 +107,7 @@ void Logic::run() {
 
 				case LOGIC_TAKE_PHOTO : {
 					// Wait for trolley to settle
-					if (!hasTimeElapsed(500)) {
+					if (!hasTimeElapsed(1000)) {
 						return;
 					}
 
